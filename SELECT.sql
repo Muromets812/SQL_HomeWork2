@@ -13,12 +13,19 @@ JOIN treks AS t ON a.albom_id = t.albom_id
 GROUP BY a.name;
 
 SELECT DISTINCT m.name  FROM musicians AS m 
-JOIN musicians_alboms AS ma ON m.musician_id = ma.musician_id 
-JOIN alboms AS a ON ma.albom_id = a.albom_id 
-WHERE a.year != 2020;
+WHERE m.name != (SELECT DISTINCT m.name  FROM musicians AS m 
+					JOIN musicians_alboms AS ma ON m.musician_id = ma.musician_id 
+					JOIN alboms AS a ON ma.albom_id = a.albom_id
+					WHERE a.year = 2020)
+;
 
 SELECT  c.name  FROM collections AS c  
-WHERE c.name  LIKE '%Queen%';
+join collection_trek as ct on c.collection_id = ct.collection_id 
+join treks t on ct.trek_id = t.trek_id 
+join musicians_alboms ma on t.albom_id = ma.albom_id 
+join musicians m on ma.musician_id = m.musician_id 
+where m.name = 'Queen'
+group by c.name;
 
 SELECT  a.name FROM alboms AS a
 JOIN musicians_alboms AS ma ON a.albom_id = ma.albom_id 
